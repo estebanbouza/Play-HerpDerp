@@ -42,7 +42,17 @@ public class Application extends Controller {
 		} else {
 			return ok("Couldn't delete derp " + id);
 		}
+	}
 
+	public static Result myDerperUpdate(String id, String name, String coolness) {
+		boolean status = updateDerp(new Long(id), name, new Integer(coolness));
+
+		if (status) {
+			Derp derp = Derp.find.byId(new Long(id));
+			return ok("Updated derp to: " + derp);
+		} else {
+			return ok("Couldn't update derp");
+		}
 	}
 
 	@Transactional
@@ -65,13 +75,30 @@ public class Application extends Controller {
 
 	@Transactional
 	public static boolean deleteDerpWithID(Long derpID) {
-		List<Derp> derps = Derp.find.where().eq("id", derpID).findList();
+		Derp derp = Derp.find.byId(derpID);
 
-		if (derps.size() != 1) {
-			System.out.println("Derps size: " + derps.size());
+		if (derp == null) {
+			System.out.println("Derp not found size: ");
 		} else {
-			Derp derp = derps.get(0);
 			derp.delete();
+
+			return true;
+		}
+
+		return false;
+	}
+
+	@Transactional
+	public static boolean updateDerp(Long id, String name, Integer coolness) {
+		Derp derp = Derp.find.byId(id);
+
+		if (derp == null) {
+			System.out.println("Derp not found");
+		} else {
+			derp.name = name;
+			derp.coolness = coolness;
+
+			derp.update();
 
 			return true;
 		}

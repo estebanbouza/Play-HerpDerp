@@ -3,10 +3,11 @@
 # ~~~~
 
 # Home page
-GET     /                           controllers.Application.index()
-GET 	/derper						controllers.Application.myDerper()
-GET 	/derper.json				controllers.Application.myDerperJson()
-GET     /derperDelete/:id			controllers.Application.myDerperDelete(id)
+GET     /                          			 	controllers.Application.index()
+GET 	/derper									controllers.Application.myDerper()
+GET 	/derper.json							controllers.Application.myDerperJson()
+GET     /derperDelete/:id						controllers.Application.myDerperDelete(id)
+GET		/derperUpdate/:id/:name/:coolness 		controllers.Application.myDerperUpdate(id, name, coolness)
 
 
 # Map static resources from the /public folder to the /assets URL path
