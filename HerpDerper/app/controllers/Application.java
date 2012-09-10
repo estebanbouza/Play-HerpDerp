@@ -10,6 +10,9 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import views.html.index;
 
+import play.mvc.BodyParser;
+import play.api.libs.json.*;
+
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -20,6 +23,8 @@ public class Application extends Controller {
 	static final int MAX_NAME_SUFFIX = 200;
 
 	static final int MAX_HERP_SUFFIX = 20;
+
+	static final String CONTENT_TYPE_JSON = "application/json";
 
 	public static Result index() {
 		return ok(index.render("Your new application is ready."));
@@ -38,7 +43,7 @@ public class Application extends Controller {
 
 		List<Herp> allHerps = findAllHerps();
 
-		return ok("derper OK: " + allHerps);
+		return ok(index.render("derper OK: " + allHerps));
 	}
 
 	public static Result myDerperJson() {
@@ -46,7 +51,9 @@ public class Application extends Controller {
 
 		ObjectMapper mapper = new ObjectMapper();
 		try {
-			return ok(mapper.writeValueAsString(allDerps));
+
+			return ok(mapper.writeValueAsString(allDerps))
+					.as(CONTENT_TYPE_JSON);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -54,13 +61,15 @@ public class Application extends Controller {
 		return null;
 	}
 
+	@BodyParser.Of(BodyParser.Json.class)
 	public static Result myHerperJson() {
 		List<Herp> allHerps = findAllHerps();
 
 		ObjectMapper mapper = new ObjectMapper();
 
 		try {
-			return ok(mapper.writeValueAsString(allHerps));
+			return ok(mapper.writeValueAsString(allHerps))
+					.as(CONTENT_TYPE_JSON);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
