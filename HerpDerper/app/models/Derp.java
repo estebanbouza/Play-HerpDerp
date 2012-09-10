@@ -14,6 +14,7 @@ public class Derp extends Model {
 	@Constraints.Min(100)
 	public Long id;
 
+	@Constraints.Required
 	public String name;
 
 	public Integer coolness;
