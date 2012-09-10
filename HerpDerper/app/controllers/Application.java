@@ -9,6 +9,8 @@ import scala.util.Random;
 import views.html.*;
 
 import models.*;
+import play.api.libs.json.*;
+import static play.libs.Json.toJson;
 
 public class Application extends Controller {
 
@@ -23,14 +25,21 @@ public class Application extends Controller {
 		derp.coolness = new Random().nextInt() % 10000;
 
 		derp.save();
-		
+
 		List<Derp> allDerps = findAllDerps();
 
 		return ok("derper OK: " + allDerps);
 	}
-	
+
+	public static Result myDerperJson() {
+		List<Derp> allDerps = findAllDerps();
+
+		return ok(toJson(allDerps));
+
+	}
+
 	public static List<Derp> findAllDerps() {
 		return Derp.find.all();
 	}
-	
+
 }

@@ -20,11 +20,11 @@ public class Derp extends Model {
 
 	public static Finder<Long, Derp> find = new Finder<Long, Derp>(Long.class,
 			Derp.class);
-	
-	
+
 	@Override
 	public String toString() {
-		return "ID: " + this.id + "name: " + this.name + "coolness: " + this.coolness;
+		return "ID: " + this.id + "name: " + this.name + "coolness: "
+				+ this.coolness;
 	}
 
 }
