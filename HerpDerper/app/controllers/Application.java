@@ -1,27 +1,31 @@
 package controllers;
 
+import java.io.IOException;
 import java.util.List;
 
-import com.mysql.jdbc.log.Log;
-
-import play.mvc.*;
-
-import views.html.*;
-
-import models.*;
+import models.Derp;
+import models.Herp;
 import play.db.ebean.Transactional;
-import static play.libs.Json.toJson;
+import play.mvc.Controller;
+import play.mvc.Result;
+import views.html.index;
+
+import com.fasterxml.jackson.core.JsonGenerationException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class Application extends Controller {
 
 	static final int MAX_COOLNESS = 10000;
 	static final int MAX_NAME_SUFFIX = 200;
 
+	static final int MAX_HERP_SUFFIX = 20;
+
 	public static Result index() {
 		return ok(index.render("Your new application is ready."));
 	}
 
-	public static Result myDerper() {
+	public static Result myDerperCreate() {
 		addRandomDerp();
 
 		List<Derp> allDerps = findAllDerps();
@@ -29,10 +33,40 @@ public class Application extends Controller {
 		return ok("derper OK: " + allDerps);
 	}
 
+	public static Result myHerperCreate() {
+		addRandomHerp();
+
+		List<Herp> allHerps = findAllHerps();
+
+		return ok("derper OK: " + allHerps);
+	}
+
 	public static Result myDerperJson() {
 		List<Derp> allDerps = findAllDerps();
 
-		return ok(toJson(allDerps));
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			return ok(mapper.writeValueAsString(allDerps));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public static Result myHerperJson() {
+		List<Herp> allHerps = findAllHerps();
+
+		ObjectMapper mapper = new ObjectMapper();
+
+		try {
+			return ok(mapper.writeValueAsString(allHerps));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return null;
 	}
 
 	public static Result myDerperDelete(String id) {
@@ -55,9 +89,25 @@ public class Application extends Controller {
 		}
 	}
 
+	public static Result myDerperAssign(String idDerp, String idHerp) {
+		Derp derp = Derp.find.byId(new Long(idDerp));
+		Herp herp = Herp.find.byId(new Long(idHerp));
+
+		derp.herp = herp;
+
+		derp.update();
+
+		return ok("Assigned derp " + derp);
+	}
+
 	@Transactional
 	public static List<Derp> findAllDerps() {
 		return Derp.find.all();
+	}
+
+	@Transactional
+	public static List<Herp> findAllHerps() {
+		return Herp.find.all();
 	}
 
 	@Transactional
@@ -71,6 +121,17 @@ public class Application extends Controller {
 		derp.coolness = coolness;
 
 		derp.save();
+	}
+
+	@Transactional
+	public static void addRandomHerp() {
+		Herp herp = new Herp();
+
+		int nameSuffix = ((new java.util.Random().nextInt() % MAX_HERP_SUFFIX) + MAX_HERP_SUFFIX) / 2;
+
+		herp.name = "Herp " + nameSuffix;
+
+		herp.save();
 	}
 
 	@Transactional

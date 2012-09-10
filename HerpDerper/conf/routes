@@ -4,11 +4,15 @@
 
 # Home page
 GET     /                          			 	controllers.Application.index()
-GET 	/derper									controllers.Application.myDerper()
+GET 	/createDerper							controllers.Application.myDerperCreate()
 GET 	/derper.json							controllers.Application.myDerperJson()
 GET     /derperDelete/:id						controllers.Application.myDerperDelete(id)
 GET		/derperUpdate/:id/:name/:coolness 		controllers.Application.myDerperUpdate(id, name, coolness)
 
+GET     /createHerp								controllers.Application.myHerperCreate()
+GET 	/herper.json							controllers.Application.myHerperJson()
+
+GET 	/assignHerpToDerp/:idHerp/:idDerp		controllers.Application.myDerperAssign(idDerp, idHerp)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

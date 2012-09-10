@@ -3,6 +3,8 @@ package models;
 import java.util.*;
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import play.db.ebean.*;
 import play.data.format.*;
 import play.data.validation.*;
@@ -16,6 +18,10 @@ public class Derp extends Model {
 
 	@Constraints.Required
 	public String name;
+	
+	@ManyToOne
+	@JsonBackReference
+	public Herp herp;
 
 	public Integer coolness;
 
@@ -24,8 +30,8 @@ public class Derp extends Model {
 
 	@Override
 	public String toString() {
-		return "ID: " + this.id + "name: " + this.name + "coolness: "
-				+ this.coolness;
+		return "ID: " + this.id + ", name: " + this.name + ", coolness: "
+				+ this.coolness + ", Herp: " + this.herp;
 	}
 
 }
